@@ -2,10 +2,15 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Desactivación - Liceo de Apodaca</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+        /* Ajuste fundamental para que nada se salga de la pantalla */
+        * {
+            box-sizing: border-box;
+        }
 
         body {
             background-color: #111;
@@ -13,17 +18,23 @@
             font-family: 'Share Tech Mono', monospace;
             text-align: center;
             margin: 0;
-            padding: 20px;
-            overflow: hidden;
+            padding: 15px;
+            overflow-x: hidden;
             transition: background-color 0.1s;
         }
 
-        h1 { font-size: 2.5em; text-shadow: 0 0 10px #0f0; margin-bottom: 5px; }
+        h1 { 
+            font-size: 2.5em; 
+            text-shadow: 0 0 10px #0f0; 
+            margin-bottom: 10px; 
+            margin-top: 0;
+        }
         
         /* Pantallas */
         #pantalla-inicio, #mensaje-final {
+            width: 100%;
             max-width: 800px;
-            margin: 50px auto;
+            margin: 20px auto;
             border: 2px solid #0f0;
             padding: 40px;
             background: #000;
@@ -33,31 +44,32 @@
 
         #game-container {
             display: none; 
+            width: 100%;
             max-width: 600px;
             margin: 0 auto;
             background: #222;
             border-radius: 10px;
             padding: 30px;
             box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
-            position: relative; /* Para centrar el mensaje de éxito */
+            position: relative; 
         }
 
         #mensaje-final { display: none; }
 
-        /* Estilo del mensaje de éxito entre niveles */
+        /* Mensaje de éxito */
         #mensaje-exito {
             display: none;
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: rgba(0, 50, 0, 0.9);
+            background-color: rgba(0, 50, 0, 0.95);
             border: 2px solid #0f0;
-            padding: 30px;
+            padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 30px #0f0;
             z-index: 1000;
-            width: 80%;
+            width: 90%;
         }
 
         #mensaje-exito h2 {
@@ -67,7 +79,14 @@
             text-shadow: 0 0 15px #0f0;
         }
 
-        .historia { font-size: 1.3em; line-height: 1.6; color: #fff; margin-bottom: 30px; text-align: left; }
+        .historia { 
+            font-size: 1.3em; 
+            line-height: 1.6; 
+            color: #fff; 
+            margin-bottom: 30px; 
+            text-align: left; 
+        }
+        
         .resaltar { color: #f1c40f; font-weight: bold; }
         .alerta { color: #e74c3c; font-weight: bold; text-shadow: 0 0 5px red; }
 
@@ -83,6 +102,8 @@
             border-radius: 5px;
             box-shadow: 0 0 15px #0f0;
             transition: transform 0.2s, background-color 0.2s;
+            width: 100%;
+            max-width: 300px;
         }
 
         button.btn-iniciar:hover { background-color: #fff; transform: scale(1.05); }
@@ -90,38 +111,52 @@
         #hud {
             display: none;
             justify-content: space-between;
+            align-items: center;
+            width: 100%;
             max-width: 600px;
             margin: 0 auto 20px auto;
             font-size: 1.5em;
             border: 2px solid #0f0;
-            padding: 10px;
+            padding: 10px 20px;
             background: #000;
+            border-radius: 5px;
         }
 
         .strike { color: red; text-shadow: 0 0 10px red; }
 
-        .instrucciones { font-size: 1.2em; color: #fff; margin-bottom: 30px; border-bottom: 1px dashed #555; padding-bottom: 15px; }
+        .instrucciones { 
+            font-size: 1.2em; 
+            color: #fff; 
+            margin-bottom: 25px; 
+            border-bottom: 1px dashed #555; 
+            padding-bottom: 15px; 
+        }
 
-        .cables-container { display: flex; flex-direction: column; gap: 15px; }
+        .cables-container { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 15px; 
+        }
 
         .cable {
             position: relative;
-            height: 60px;
+            height: 65px;
             background: linear-gradient(90deg, #555 10%, var(--cable-color) 10%, var(--cable-color) 90%, #555 90%);
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.8em;
+            font-size: 2em;
             color: white;
             font-weight: bold;
             text-shadow: 2px 2px 4px black;
             transition: transform 0.1s, opacity 0.3s;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.5);
+            user-select: none; /* Evita que el texto se seleccione en móviles al tocar rápido */
         }
 
-        .cable:active { transform: scale(0.98); }
+        .cable:active { transform: scale(0.95); }
 
         .cable.cortado {
             opacity: 0.3;
@@ -150,6 +185,32 @@
             90% { transform: translate(2px, 3px) rotate(0deg); }
             100% { transform: translate(2px, -3px) rotate(-1deg); }
         }
+
+        /* MEDIA QUERIES PARA CELULARES Y TABLETS (RESPONSIVE) */
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8em; }
+            .historia { font-size: 1.1em; }
+            #pantalla-inicio, #mensaje-final { padding: 25px 15px; margin: 10px auto; }
+            #game-container { padding: 20px 15px; }
+            .instrucciones { font-size: 1.1em; }
+            .cable { height: 55px; font-size: 1.6em; }
+            #hud { font-size: 1.3em; padding: 10px; }
+            #mensaje-exito h2 { font-size: 1.5em; }
+        }
+
+        @media (max-width: 480px) {
+            h1 { font-size: 1.5em; }
+            .historia { font-size: 1em; margin-bottom: 20px; }
+            .instrucciones { font-size: 1em; margin-bottom: 15px; }
+            #hud { 
+                flex-direction: column; /* Apila el tiempo y los errores verticalmente */
+                gap: 5px; 
+                font-size: 1.2em;
+            }
+            .cable { height: 50px; font-size: 1.4em; }
+            button.btn-iniciar { font-size: 1.2em; max-width: 100%; }
+            #mensaje-exito h2 { font-size: 1.2em; }
+        }
     </style>
 </head>
 <body>
@@ -175,15 +236,15 @@
     <!-- CONTENEDOR DEL JUEGO (BOMBA) -->
     <div id="game-container">
         
-        <!-- MENSAJE DE ÉXITO (Se oculta por defecto) -->
+        <!-- MENSAJE DE ÉXITO -->
         <div id="mensaje-exito">
-            <h2>¡BOMBA DESACTIVADA CON ÉXITO!</h2>
+            <h2>¡BOMBA DESACTIVADA!</h2>
         </div>
 
         <h1 id="nivel-titulo">BOMBA 1 / 12</h1>
         
         <div class="instrucciones">
-            Revisa el <strong>Documento Físico</strong> para este módulo.<br>
+            Revisa el <strong>Documento Físico</strong> de este módulo.<br>
             Corta los <strong>3 cables incorrectos</strong>. <br>
             <span class="alerta">¡NO CORTES LA RESPUESTA CORRECTA!</span>
         </div>
@@ -195,116 +256,91 @@
 
     <!-- PANTALLA FINAL (VICTORIA) -->
     <div id="mensaje-final">
-        <h1 style="color: #0f0; text-shadow: 0 0 20px #0f0; font-size: 3em;">✅ SISTEMA ASEGURADO ✅</h1>
-        <div class="historia" style="text-align: center; margin-top: 30px;">
+        <h1 style="color: #0f0; text-shadow: 0 0 20px #0f0; font-size: 2.5em;">✅ SISTEMA ASEGURADO ✅</h1>
+        <div class="historia" style="text-align: center; margin-top: 20px;">
             <p>¡Misión cumplida, escuadrón!</p>
             <p>Gracias a su excelente comunicación y razonamiento geométrico, las 12 bombas en la oficina de Charlie han sido desactivadas con éxito.</p>
-            <p class="resaltar" style="font-size: 1.5em; margin-top: 20px;">Los servidores del Liceo de Apodaca han sido salvados y todos los datos académicos están completamente resguardados.</p>
+            <p class="resaltar" style="font-size: 1.3em; margin-top: 20px;">Los servidores del Liceo de Apodaca han sido salvados y todos los datos académicos están completamente resguardados.</p>
         </div>
     </div>
 
-    <!-- Efecto de sonido (opcional) -->
     <audio id="sonido-explosion" src="https://www.soundjay.com/mechanical/sounds/explosion-01.mp3"></audio>
 
     <script>
         // --- AQUÍ MODIFICAS TUS 12 PROBLEMAS ---
         const niveles = [
-            { // BOMBA 1
-                cables: [
-                    { valor: "40°",  color: "#e74c3c", esSeguroCortar: true },
-                    { valor: "140°", color: "#3498db", esSeguroCortar: false }, // LA RESPUESTA CORRECTA
-                    { valor: "50°",  color: "#2ecc71", esSeguroCortar: true },
-                    { valor: "90°",  color: "#f1c40f", esSeguroCortar: true }
-                ]
-            },
-            { // BOMBA 2
-                cables: [
-                    { valor: "100°", color: "#e74c3c", esSeguroCortar: true },
-                    { valor: "80°",  color: "#3498db", esSeguroCortar: true },
-                    { valor: "60°",  color: "#2ecc71", esSeguroCortar: false }, 
-                    { valor: "120°", color: "#f1c40f", esSeguroCortar: true }
-                ]
-            },
-            { // BOMBA 3
-                cables: [
-                    { valor: "45°",  color: "#e74c3c", esSeguroCortar: true },
-                    { valor: "135°", color: "#3498db", esSeguroCortar: false }, 
-                    { valor: "55°",  color: "#2ecc71", esSeguroCortar: true },
-                    { valor: "180°", color: "#f1c40f", esSeguroCortar: true }
-                ]
-            },
-            { // BOMBA 4
-                cables: [
-                    { valor: "70°",  color: "#e74c3c", esSeguroCortar: false }, 
-                    { valor: "110°", color: "#3498db", esSeguroCortar: true },
-                    { valor: "20°",  color: "#2ecc71", esSeguroCortar: true },
-                    { valor: "90°",  color: "#f1c40f", esSeguroCortar: true }
-                ]
-            },
-            { // BOMBA 5
-                cables: [
-                    { valor: "30°",  color: "#e74c3c", esSeguroCortar: true },
-                    { valor: "60°",  color: "#3498db", esSeguroCortar: true },
-                    { valor: "150°", color: "#2ecc71", esSeguroCortar: false }, 
-                    { valor: "120°", color: "#f1c40f", esSeguroCortar: true }
-                ]
-            },
-            { // BOMBA 6
-                cables: [
-                    { valor: "85°",  color: "#e74c3c", esSeguroCortar: true },
-                    { valor: "95°",  color: "#3498db", esSeguroCortar: true },
-                    { valor: "105°", color: "#2ecc71", esSeguroCortar: true },
-                    { valor: "175°", color: "#f1c40f", esSeguroCortar: false } 
-                ]
-            },
-            { // BOMBA 7
-                cables: [
-                    { valor: "10°",  color: "#e74c3c", esSeguroCortar: true },
-                    { valor: "20°",  color: "#3498db", esSeguroCortar: true },
-                    { valor: "50°",  color: "#2ecc71", esSeguroCortar: false }, 
-                    { valor: "80°",  color: "#f1c40f", esSeguroCortar: true }
-                ]
-            },
-            { // BOMBA 8
-                cables: [
-                    { valor: "180°", color: "#e74c3c", esSeguroCortar: true },
-                    { valor: "360°", color: "#3498db", esSeguroCortar: true },
-                    { valor: "90°",  color: "#2ecc71", esSeguroCortar: false }, 
-                    { valor: "45°",  color: "#f1c40f", esSeguroCortar: true }
-                ]
-            },
-            { // BOMBA 9
-                cables: [
-                    { valor: "115°", color: "#e74c3c", esSeguroCortar: true },
-                    { valor: "65°",  color: "#3498db", esSeguroCortar: false }, 
-                    { valor: "25°",  color: "#2ecc71", esSeguroCortar: true },
-                    { valor: "155°", color: "#f1c40f", esSeguroCortar: true }
-                ]
-            },
-            { // BOMBA 10
-                cables: [
-                    { valor: "33°",  color: "#e74c3c", esSeguroCortar: true },
-                    { valor: "147°", color: "#3498db", esSeguroCortar: true },
-                    { valor: "57°",  color: "#2ecc71", esSeguroCortar: false }, 
-                    { valor: "123°", color: "#f1c40f", esSeguroCortar: true }
-                ]
-            },
-            { // BOMBA 11
-                cables: [
-                    { valor: "75°",  color: "#e74c3c", esSeguroCortar: false }, 
-                    { valor: "105°", color: "#3498db", esSeguroCortar: true },
-                    { valor: "85°",  color: "#2ecc71", esSeguroCortar: true },
-                    { valor: "115°", color: "#f1c40f", esSeguroCortar: true }
-                ]
-            },
-            { // BOMBA 12 (Jefe Final)
-                cables: [
-                    { valor: "16°",  color: "#e74c3c", esSeguroCortar: true },
-                    { valor: "164°", color: "#3498db", esSeguroCortar: false }, 
-                    { valor: "74°",  color: "#2ecc71", esSeguroCortar: true },
-                    { valor: "106°", color: "#f1c40f", esSeguroCortar: true }
-                ]
-            }
+            { cables: [
+                { valor: "40°",  color: "#e74c3c", esSeguroCortar: true },
+                { valor: "140°", color: "#3498db", esSeguroCortar: false }, // CORRECTA
+                { valor: "50°",  color: "#2ecc71", esSeguroCortar: true },
+                { valor: "90°",  color: "#f1c40f", esSeguroCortar: true }
+            ]},
+            { cables: [
+                { valor: "100°", color: "#e74c3c", esSeguroCortar: true },
+                { valor: "80°",  color: "#3498db", esSeguroCortar: true },
+                { valor: "60°",  color: "#2ecc71", esSeguroCortar: false }, // CORRECTA
+                { valor: "120°", color: "#f1c40f", esSeguroCortar: true }
+            ]},
+            { cables: [
+                { valor: "45°",  color: "#e74c3c", esSeguroCortar: true },
+                { valor: "135°", color: "#3498db", esSeguroCortar: false }, // CORRECTA
+                { valor: "55°",  color: "#2ecc71", esSeguroCortar: true },
+                { valor: "180°", color: "#f1c40f", esSeguroCortar: true }
+            ]},
+            { cables: [
+                { valor: "70°",  color: "#e74c3c", esSeguroCortar: false }, // CORRECTA
+                { valor: "110°", color: "#3498db", esSeguroCortar: true },
+                { valor: "20°",  color: "#2ecc71", esSeguroCortar: true },
+                { valor: "90°",  color: "#f1c40f", esSeguroCortar: true }
+            ]},
+            { cables: [
+                { valor: "30°",  color: "#e74c3c", esSeguroCortar: true },
+                { valor: "60°",  color: "#3498db", esSeguroCortar: true },
+                { valor: "150°", color: "#2ecc71", esSeguroCortar: false }, // CORRECTA
+                { valor: "120°", color: "#f1c40f", esSeguroCortar: true }
+            ]},
+            { cables: [
+                { valor: "85°",  color: "#e74c3c", esSeguroCortar: true },
+                { valor: "95°",  color: "#3498db", esSeguroCortar: true },
+                { valor: "105°", color: "#2ecc71", esSeguroCortar: true },
+                { valor: "175°", color: "#f1c40f", esSeguroCortar: false } // CORRECTA
+            ]},
+            { cables: [
+                { valor: "10°",  color: "#e74c3c", esSeguroCortar: true },
+                { valor: "20°",  color: "#3498db", esSeguroCortar: true },
+                { valor: "50°",  color: "#2ecc71", esSeguroCortar: false }, // CORRECTA
+                { valor: "80°",  color: "#f1c40f", esSeguroCortar: true }
+            ]},
+            { cables: [
+                { valor: "180°", color: "#e74c3c", esSeguroCortar: true },
+                { valor: "360°", color: "#3498db", esSeguroCortar: true },
+                { valor: "90°",  color: "#2ecc71", esSeguroCortar: false }, // CORRECTA
+                { valor: "45°",  color: "#f1c40f", esSeguroCortar: true }
+            ]},
+            { cables: [
+                { valor: "115°", color: "#e74c3c", esSeguroCortar: true },
+                { valor: "65°",  color: "#3498db", esSeguroCortar: false }, // CORRECTA
+                { valor: "25°",  color: "#2ecc71", esSeguroCortar: true },
+                { valor: "155°", color: "#f1c40f", esSeguroCortar: true }
+            ]},
+            { cables: [
+                { valor: "33°",  color: "#e74c3c", esSeguroCortar: true },
+                { valor: "147°", color: "#3498db", esSeguroCortar: true },
+                { valor: "57°",  color: "#2ecc71", esSeguroCortar: false }, // CORRECTA
+                { valor: "123°", color: "#f1c40f", esSeguroCortar: true }
+            ]},
+            { cables: [
+                { valor: "75°",  color: "#e74c3c", esSeguroCortar: false }, // CORRECTA
+                { valor: "105°", color: "#3498db", esSeguroCortar: true },
+                { valor: "85°",  color: "#2ecc71", esSeguroCortar: true },
+                { valor: "115°", color: "#f1c40f", esSeguroCortar: true }
+            ]},
+            { cables: [
+                { valor: "16°",  color: "#e74c3c", esSeguroCortar: true },
+                { valor: "164°", color: "#3498db", esSeguroCortar: false }, // CORRECTA
+                { valor: "74°",  color: "#2ecc71", esSeguroCortar: true },
+                { valor: "106°", color: "#f1c40f", esSeguroCortar: true }
+            ]}
         ];
 
         let nivelActual = 0;
@@ -323,7 +359,6 @@
             document.getElementById('hud').style.display = 'flex';
             document.getElementById('game-container').style.display = 'block';
             
-            // Iniciar cronómetro
             intervaloTimer = setInterval(() => {
                 tiempo--;
                 let minutos = Math.floor(tiempo / 60);
@@ -341,7 +376,6 @@
 
         function cargarNivel() {
             if (nivelActual >= niveles.length) {
-                // GANARON EL JUEGO
                 clearInterval(intervaloTimer);
                 document.getElementById('game-container').style.display = 'none';
                 document.getElementById('hud').style.display = 'none';
@@ -349,13 +383,11 @@
                 return;
             }
 
-            const nivel = niveles[nivelActual];
             tituloNivel.textContent = `BOMBA ${nivelActual + 1} / 12`;
             cablesCortados = 0;
-
-            // Mezclar los cables
-            const cablesMezclados = nivel.cables.sort(() => Math.random() - 0.5);
             contenedorCables.innerHTML = '';
+
+            const cablesMezclados = niveles[nivelActual].cables.sort(() => Math.random() - 0.5);
 
             cablesMezclados.forEach(cableInfo => {
                 const divCable = document.createElement('div');
@@ -371,12 +403,10 @@
             if (elemento.classList.contains('cortado')) return;
 
             if (esSeguroCortar) {
-                // CORTE EXITOSO
                 elemento.classList.add('cortado');
                 cablesCortados++;
 
                 if (cablesCortados === 3) {
-                    // BLOQUEAMOS LA PANTALLA TEMPORALMENTE Y MOSTRAMOS EL MENSAJE DE ÉXITO
                     contenedorCables.style.pointerEvents = 'none';
                     mensajeExito.style.display = 'block';
 
@@ -385,10 +415,9 @@
                         contenedorCables.style.pointerEvents = 'auto';
                         nivelActual++;
                         cargarNivel();
-                    }, 1500); // 1.5 segundos leyendo el mensaje de éxito
+                    }, 1500);
                 }
             } else {
-                // EXPLOSIÓN (Cortaron el cable con la respuesta matemática)
                 detonarBomba();
             }
         }
@@ -412,7 +441,7 @@
                     location.reload();
                 } else {
                     alert("¡CORTASTE EL CABLE CORRECTO! La bomba se desestabilizó. Tienen que reintentar este módulo.");
-                    cargarNivel(); // Reinicia la bomba actual
+                    cargarNivel(); 
                 }
             }, 1000);
         }
