@@ -273,18 +273,102 @@
     <script>
         // --- AQUÍ MODIFICAS TUS 12 PROBLEMAS ---
         const niveles = [
-            { cables: [{ valor: "40°", color: "#e74c3c", esSeguroCortar: true }, { valor: "140°", color: "#3498db", esSeguroCortar: false }, { valor: "50°", color: "#2ecc71", esSeguroCortar: true }, { valor: "90°", color: "#f1c40f", esSeguroCortar: true }] },
-            { cables: [{ valor: "100°", color: "#e74c3c", esSeguroCortar: true }, { valor: "80°", color: "#3498db", esSeguroCortar: true }, { valor: "60°", color: "#2ecc71", esSeguroCortar: false }, { valor: "120°", color: "#f1c40f", esSeguroCortar: true }] },
-            { cables: [{ valor: "45°", color: "#e74c3c", esSeguroCortar: true }, { valor: "135°", color: "#3498db", esSeguroCortar: false }, { valor: "55°", color: "#2ecc71", esSeguroCortar: true }, { valor: "180°", color: "#f1c40f", esSeguroCortar: true }] },
-            { cables: [{ valor: "70°", color: "#e74c3c", esSeguroCortar: false }, { valor: "110°", color: "#3498db", esSeguroCortar: true }, { valor: "20°", color: "#2ecc71", esSeguroCortar: true }, { valor: "90°", color: "#f1c40f", esSeguroCortar: true }] },
-            { cables: [{ valor: "30°", color: "#e74c3c", esSeguroCortar: true }, { valor: "60°", color: "#3498db", esSeguroCortar: true }, { valor: "150°", color: "#2ecc71", esSeguroCortar: false }, { valor: "120°", color: "#f1c40f", esSeguroCortar: true }] },
-            { cables: [{ valor: "85°", color: "#e74c3c", esSeguroCortar: true }, { valor: "95°", color: "#3498db", esSeguroCortar: true }, { valor: "105°", color: "#2ecc71", esSeguroCortar: true }, { valor: "175°", color: "#f1c40f", esSeguroCortar: false }] },
-            { cables: [{ valor: "10°", color: "#e74c3c", esSeguroCortar: true }, { valor: "20°", color: "#3498db", esSeguroCortar: true }, { valor: "50°", color: "#2ecc71", esSeguroCortar: false }, { valor: "80°", color: "#f1c40f", esSeguroCortar: true }] },
-            { cables: [{ valor: "180°", color: "#e74c3c", esSeguroCortar: true }, { valor: "360°", color: "#3498db", esSeguroCortar: true }, { valor: "90°", color: "#2ecc71", esSeguroCortar: false }, { valor: "45°", color: "#f1c40f", esSeguroCortar: true }] },
-            { cables: [{ valor: "115°", color: "#e74c3c", esSeguroCortar: true }, { valor: "65°", color: "#3498db", esSeguroCortar: false }, { valor: "25°", color: "#2ecc71", esSeguroCortar: true }, { valor: "155°", color: "#f1c40f", esSeguroCortar: true }] },
-            { cables: [{ valor: "33°", color: "#e74c3c", esSeguroCortar: true }, { valor: "147°", color: "#3498db", esSeguroCortar: true }, { valor: "57°", color: "#2ecc71", esSeguroCortar: false }, { valor: "123°", color: "#f1c40f", esSeguroCortar: true }] },
-            { cables: [{ valor: "75°", color: "#e74c3c", esSeguroCortar: false }, { valor: "105°", color: "#3498db", esSeguroCortar: true }, { valor: "85°", color: "#2ecc71", esSeguroCortar: true }, { valor: "115°", color: "#f1c40f", esSeguroCortar: true }] },
-            { cables: [{ valor: "16°", color: "#e74c3c", esSeguroCortar: true }, { valor: "164°", color: "#3498db", esSeguroCortar: false }, { valor: "74°", color: "#2ecc71", esSeguroCortar: true }, { valor: "106°", color: "#f1c40f", esSeguroCortar: true }] }
+            { // BOMBA 1 (Resp: 55 -> Detonador AZUL)
+                cables: [
+                    { valor: "", color: "#e74c3c", esSeguroCortar: true },
+                    { valor: "", color: "#3498db", esSeguroCortar: false }, // LA RESPUESTA CORRECTA
+                    { valor: "", color: "#2ecc71", esSeguroCortar: true },
+                    { valor: "", color: "#f1c40f", esSeguroCortar: true }
+                ]
+            },
+            { // BOMBA 2 (Resp: 120 -> Detonador ROJO)
+                cables: [
+                    { valor: "", color: "#e74c3c", esSeguroCortar: false }, // LA RESPUESTA CORRECTA
+                    { valor: "", color: "#3498db", esSeguroCortar: true },
+                    { valor: "", color: "#2ecc71", esSeguroCortar: true },
+                    { valor: "", color: "#f1c40f", esSeguroCortar: true }
+                ]
+            },
+            { // BOMBA 3 (Resp: 10 -> Detonador VERDE)
+                cables: [
+                    { valor: "", color: "#e74c3c", esSeguroCortar: true },
+                    { valor: "", color: "#3498db", esSeguroCortar: true },
+                    { valor: "", color: "#2ecc71", esSeguroCortar: false }, // LA RESPUESTA CORRECTA
+                    { valor: "", color: "#f1c40f", esSeguroCortar: true }
+                ]
+            },
+            { // BOMBA 4 (Resp: 40 -> Detonador AMARILLO)
+                cables: [
+                    { valor: "", color: "#e74c3c", esSeguroCortar: true },
+                    { valor: "", color: "#3498db", esSeguroCortar: true },
+                    { valor: "", color: "#2ecc71", esSeguroCortar: true },
+                    { valor: "", color: "#f1c40f", esSeguroCortar: false } // LA RESPUESTA CORRECTA
+                ]
+            },
+            { // BOMBA 5 (Resp: 135 -> Detonador VERDE)
+                cables: [
+                    { valor: "", color: "#e74c3c", esSeguroCortar: true },
+                    { valor: "", color: "#3498db", esSeguroCortar: true },
+                    { valor: "", color: "#2ecc71", esSeguroCortar: false }, // LA RESPUESTA CORRECTA
+                    { valor: "", color: "#f1c40f", esSeguroCortar: true }
+                ]
+            },
+            { // BOMBA 6 (Resp: 6 -> Detonador AZUL)
+                cables: [
+                    { valor: "", color: "#e74c3c", esSeguroCortar: true },
+                    { valor: "", color: "#3498db", esSeguroCortar: false }, // LA RESPUESTA CORRECTA
+                    { valor: "", color: "#2ecc71", esSeguroCortar: true },
+                    { valor: "", color: "#f1c40f", esSeguroCortar: true }
+                ]
+            },
+            { // BOMBA 7 (Resp: 60 -> Detonador ROJO)
+                cables: [
+                    { valor: "", color: "#e74c3c", esSeguroCortar: false }, // LA RESPUESTA CORRECTA
+                    { valor: "", color: "#3498db", esSeguroCortar: true },
+                    { valor: "", color: "#2ecc71", esSeguroCortar: true },
+                    { valor: "", color: "#f1c40f", esSeguroCortar: true }
+                ]
+            },
+            { // BOMBA 8 (Resp: 70 -> Detonador AMARILLO)
+                cables: [
+                    { valor: "", color: "#e74c3c", esSeguroCortar: true },
+                    { valor: "", color: "#3498db", esSeguroCortar: true },
+                    { valor: "", color: "#2ecc71", esSeguroCortar: true },
+                    { valor: "", color: "#f1c40f", esSeguroCortar: false } // LA RESPUESTA CORRECTA
+                ]
+            },
+            { // BOMBA 9 (Resp: 15 -> Detonador AZUL)
+                cables: [
+                    { valor: "", color: "#e74c3c", esSeguroCortar: true },
+                    { valor: "", color: "#3498db", esSeguroCortar: false }, // LA RESPUESTA CORRECTA
+                    { valor: "", color: "#2ecc71", esSeguroCortar: true },
+                    { valor: "", color: "#f1c40f", esSeguroCortar: true }
+                ]
+            },
+            { // BOMBA 10 (Resp: 73 -> Detonador VERDE)
+                cables: [
+                    { valor: "", color: "#e74c3c", esSeguroCortar: true },
+                    { valor: "", color: "#3498db", esSeguroCortar: true },
+                    { valor: "", color: "#2ecc71", esSeguroCortar: false }, // LA RESPUESTA CORRECTA
+                    { valor: "", color: "#f1c40f", esSeguroCortar: true }
+                ]
+            },
+            { // BOMBA 11 (Resp: 153 -> Detonador ROJO)
+                cables: [
+                    { valor: "", color: "#e74c3c", esSeguroCortar: false }, // LA RESPUESTA CORRECTA
+                    { valor: "", color: "#3498db", esSeguroCortar: true },
+                    { valor: "", color: "#2ecc71", esSeguroCortar: true },
+                    { valor: "", color: "#f1c40f", esSeguroCortar: true }
+                ]
+            },
+            { // BOMBA 12 (Resp: 25 -> Detonador AMARILLO)
+                cables: [
+                    { valor: "", color: "#e74c3c", esSeguroCortar: true },
+                    { valor: "", color: "#3498db", esSeguroCortar: true },
+                    { valor: "", color: "#2ecc71", esSeguroCortar: true },
+                    { valor: "", color: "#f1c40f", esSeguroCortar: false } // LA RESPUESTA CORRECTA
+                ]
+            }
         ];
 
         let nivelActual = 0;
