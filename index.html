@@ -7,7 +7,6 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
 
-        /* Ajuste fundamental para que nada se salga de la pantalla */
         * {
             box-sizing: border-box;
         }
@@ -30,8 +29,8 @@
             margin-top: 0;
         }
         
-        /* Pantallas */
-        #pantalla-inicio, #mensaje-final {
+        /* Contenedores Principales */
+        #pantalla-inicio, #pantalla-registro, #pantalla-turno, #mensaje-final {
             width: 100%;
             max-width: 800px;
             margin: 20px auto;
@@ -42,8 +41,11 @@
             border-radius: 10px;
         }
 
-        #game-container {
+        #pantalla-registro, #pantalla-turno, #game-container, #mensaje-final {
             display: none; 
+        }
+
+        #game-container {
             width: 100%;
             max-width: 600px;
             margin: 0 auto;
@@ -54,9 +56,29 @@
             position: relative; 
         }
 
-        #mensaje-final { display: none; }
+        /* Inputs de Registro */
+        .input-hacker {
+            width: 100%;
+            max-width: 400px;
+            padding: 15px;
+            margin: 10px auto;
+            background-color: #000;
+            border: 1px solid #0f0;
+            color: #0f0;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.2em;
+            text-align: center;
+            outline: none;
+            display: block;
+        }
+        .input-hacker:focus {
+            box-shadow: 0 0 10px #0f0;
+        }
+        .input-hacker::placeholder {
+            color: #050;
+        }
 
-        /* Mensaje de éxito */
+        /* Mensaje de éxito flotante */
         #mensaje-exito {
             display: none;
             position: absolute;
@@ -72,22 +94,10 @@
             width: 90%;
         }
 
-        #mensaje-exito h2 {
-            color: #0f0;
-            margin: 0;
-            font-size: 2em;
-            text-shadow: 0 0 15px #0f0;
-        }
+        #mensaje-exito h2 { color: #0f0; margin: 0; font-size: 2em; text-shadow: 0 0 15px #0f0; }
 
-        .historia { 
-            font-size: 1.3em; 
-            line-height: 1.6; 
-            color: #fff; 
-            margin-bottom: 30px; 
-            text-align: left; 
-        }
-        
-        .resaltar { color: #f1c40f; font-weight: bold; }
+        .historia { font-size: 1.3em; line-height: 1.6; color: #fff; margin-bottom: 30px; text-align: left; }
+        .resaltar { color: #f1c40f; font-weight: bold; text-transform: uppercase; }
         .alerta { color: #e74c3c; font-weight: bold; text-shadow: 0 0 5px red; }
 
         button.btn-iniciar {
@@ -97,15 +107,15 @@
             font-size: 1.5em;
             font-weight: bold;
             padding: 15px 40px;
+            margin-top: 15px;
             border: none;
             cursor: pointer;
             border-radius: 5px;
             box-shadow: 0 0 15px #0f0;
             transition: transform 0.2s, background-color 0.2s;
             width: 100%;
-            max-width: 300px;
+            max-width: 350px;
         }
-
         button.btn-iniciar:hover { background-color: #fff; transform: scale(1.05); }
 
         #hud {
@@ -123,20 +133,8 @@
         }
 
         .strike { color: red; text-shadow: 0 0 10px red; }
-
-        .instrucciones { 
-            font-size: 1.2em; 
-            color: #fff; 
-            margin-bottom: 25px; 
-            border-bottom: 1px dashed #555; 
-            padding-bottom: 15px; 
-        }
-
-        .cables-container { 
-            display: flex; 
-            flex-direction: column; 
-            gap: 15px; 
-        }
+        .instrucciones { font-size: 1.2em; color: #fff; margin-bottom: 25px; border-bottom: 1px dashed #555; padding-bottom: 15px; }
+        .cables-container { display: flex; flex-direction: column; gap: 15px; }
 
         .cable {
             position: relative;
@@ -153,24 +151,12 @@
             text-shadow: 2px 2px 4px black;
             transition: transform 0.1s, opacity 0.3s;
             box-shadow: 0 5px 10px rgba(0,0,0,0.5);
-            user-select: none; /* Evita que el texto se seleccione en móviles al tocar rápido */
+            user-select: none; 
         }
-
         .cable:active { transform: scale(0.95); }
+        .cable.cortado { opacity: 0.3; pointer-events: none; background: #333; text-decoration: line-through; color: #888; }
 
-        .cable.cortado {
-            opacity: 0.3;
-            pointer-events: none;
-            background: #333;
-            text-decoration: line-through;
-            color: #888;
-        }
-
-        .explosion {
-            animation: shake 0.5s infinite;
-            background-color: #500 !important;
-            color: #fff !important;
-        }
+        .explosion { animation: shake 0.5s infinite; background-color: #500 !important; color: #fff !important; }
 
         @keyframes shake {
             0% { transform: translate(2px, 2px) rotate(0deg); }
@@ -186,11 +172,11 @@
             100% { transform: translate(2px, -3px) rotate(-1deg); }
         }
 
-        /* MEDIA QUERIES PARA CELULARES Y TABLETS (RESPONSIVE) */
+        /* MEDIA QUERIES (RESPONSIVE) */
         @media (max-width: 768px) {
             h1 { font-size: 1.8em; }
             .historia { font-size: 1.1em; }
-            #pantalla-inicio, #mensaje-final { padding: 25px 15px; margin: 10px auto; }
+            #pantalla-inicio, #pantalla-registro, #pantalla-turno, #mensaje-final { padding: 25px 15px; margin: 10px auto; }
             #game-container { padding: 20px 15px; }
             .instrucciones { font-size: 1.1em; }
             .cable { height: 55px; font-size: 1.6em; }
@@ -202,11 +188,7 @@
             h1 { font-size: 1.5em; }
             .historia { font-size: 1em; margin-bottom: 20px; }
             .instrucciones { font-size: 1em; margin-bottom: 15px; }
-            #hud { 
-                flex-direction: column; /* Apila el tiempo y los errores verticalmente */
-                gap: 5px; 
-                font-size: 1.2em;
-            }
+            #hud { flex-direction: column; gap: 5px; font-size: 1.2em; }
             .cable { height: 50px; font-size: 1.4em; }
             button.btn-iniciar { font-size: 1.2em; max-width: 100%; }
             #mensaje-exito h2 { font-size: 1.2em; }
@@ -215,16 +197,38 @@
 </head>
 <body>
 
-    <!-- PANTALLA DE INICIO (HISTORIA) -->
+    <!-- 1. PANTALLA DE INICIO (HISTORIA) -->
     <div id="pantalla-inicio">
         <h1>🚨 ALERTA DE SEGURIDAD 🚨</h1>
         <div class="historia">
             <p>Atención escuadrón del <strong>Liceo de Apodaca</strong>. Los hackers han vulnerado nuestra red nuevamente. Esta vez, han plantado <span class="resaltar">12 bombas lógicas</span> directamente en la oficina de Charlie, amenazando con destruir los servidores principales del colegio.</p>
             <p>Ustedes operarán a ciegas. Tienen en sus manos el manual físico con los problemas geométricos. La persona frente a esta terminal no verá los diagramas, solo verá los cables de frecuencia disponibles para cortar.</p>
-            <p><strong>SU MISIÓN:</strong> Analizar los diagramas físicos, calcular la respuesta correcta de cada módulo y comunicársela al operador de la terminal. <br><br>
-            <span class="alerta">REGLA VITAL: DEBEN CORTAR LOS 3 CABLES INCORRECTOS. Si el operador corta el cable que contiene la respuesta matemática correcta... LA BOMBA DETONARÁ.</span></p>
+            <p><strong>SU MISIÓN:</strong> Analizar los diagramas físicos, calcular la respuesta correcta de cada módulo y comunicársela al operador de la terminal.</p>
         </div>
-        <button class="btn-iniciar" onclick="iniciarJuego()">INICIAR PROTOCOLO</button>
+        <button class="btn-iniciar" onclick="mostrarRegistro()">CONFIGURAR EQUIPO</button>
+    </div>
+
+    <!-- 2. PANTALLA DE REGISTRO DE EQUIPO -->
+    <div id="pantalla-registro">
+        <h1>👥 REGISTRO DE ESCUADRÓN 👥</h1>
+        <div class="historia" style="text-align: center;">
+            <p>Identifiquen a los especialistas de esta misión. <br>(Mínimo 2, Máximo 4 operadores).</p>
+        </div>
+        <input type="text" id="j1" class="input-hacker" placeholder="Operador 1" autocomplete="off">
+        <input type="text" id="j2" class="input-hacker" placeholder="Operador 2" autocomplete="off">
+        <input type="text" id="j3" class="input-hacker" placeholder="Operador 3 (Opcional)" autocomplete="off">
+        <input type="text" id="j4" class="input-hacker" placeholder="Operador 4 (Opcional)" autocomplete="off">
+        
+        <button class="btn-iniciar" onclick="iniciarMision()">INICIAR PROTOCOLO</button>
+    </div>
+
+    <!-- 3. PANTALLA DE TURNO (ROTACIÓN) -->
+    <div id="pantalla-turno">
+        <h1>🔄 CAMBIO DE OPERADOR 🔄</h1>
+        <div class="historia" style="text-align: center; margin-top: 20px;">
+            <p style="font-size: 1.5em;" id="texto-turno"></p>
+        </div>
+        <button class="btn-iniciar" onclick="cargarCablesNivel()">ESTOY LISTO - CONTINUAR</button>
     </div>
 
     <!-- HUD (TIEMPO Y ERRORES) -->
@@ -233,7 +237,7 @@
         <div id="strikes">Errores: 0/3</div>
     </div>
 
-    <!-- CONTENEDOR DEL JUEGO (BOMBA) -->
+    <!-- 4. CONTENEDOR DEL JUEGO (BOMBA) -->
     <div id="game-container">
         
         <!-- MENSAJE DE ÉXITO -->
@@ -254,7 +258,7 @@
         </div>
     </div>
 
-    <!-- PANTALLA FINAL (VICTORIA) -->
+    <!-- 5. PANTALLA FINAL (VICTORIA) -->
     <div id="mensaje-final">
         <h1 style="color: #0f0; text-shadow: 0 0 20px #0f0; font-size: 2.5em;">✅ SISTEMA ASEGURADO ✅</h1>
         <div class="historia" style="text-align: center; margin-top: 20px;">
@@ -269,78 +273,18 @@
     <script>
         // --- AQUÍ MODIFICAS TUS 12 PROBLEMAS ---
         const niveles = [
-            { cables: [
-                { valor: "40°",  color: "#e74c3c", esSeguroCortar: true },
-                { valor: "140°", color: "#3498db", esSeguroCortar: false }, // CORRECTA
-                { valor: "50°",  color: "#2ecc71", esSeguroCortar: true },
-                { valor: "90°",  color: "#f1c40f", esSeguroCortar: true }
-            ]},
-            { cables: [
-                { valor: "100°", color: "#e74c3c", esSeguroCortar: true },
-                { valor: "80°",  color: "#3498db", esSeguroCortar: true },
-                { valor: "60°",  color: "#2ecc71", esSeguroCortar: false }, // CORRECTA
-                { valor: "120°", color: "#f1c40f", esSeguroCortar: true }
-            ]},
-            { cables: [
-                { valor: "45°",  color: "#e74c3c", esSeguroCortar: true },
-                { valor: "135°", color: "#3498db", esSeguroCortar: false }, // CORRECTA
-                { valor: "55°",  color: "#2ecc71", esSeguroCortar: true },
-                { valor: "180°", color: "#f1c40f", esSeguroCortar: true }
-            ]},
-            { cables: [
-                { valor: "70°",  color: "#e74c3c", esSeguroCortar: false }, // CORRECTA
-                { valor: "110°", color: "#3498db", esSeguroCortar: true },
-                { valor: "20°",  color: "#2ecc71", esSeguroCortar: true },
-                { valor: "90°",  color: "#f1c40f", esSeguroCortar: true }
-            ]},
-            { cables: [
-                { valor: "30°",  color: "#e74c3c", esSeguroCortar: true },
-                { valor: "60°",  color: "#3498db", esSeguroCortar: true },
-                { valor: "150°", color: "#2ecc71", esSeguroCortar: false }, // CORRECTA
-                { valor: "120°", color: "#f1c40f", esSeguroCortar: true }
-            ]},
-            { cables: [
-                { valor: "85°",  color: "#e74c3c", esSeguroCortar: true },
-                { valor: "95°",  color: "#3498db", esSeguroCortar: true },
-                { valor: "105°", color: "#2ecc71", esSeguroCortar: true },
-                { valor: "175°", color: "#f1c40f", esSeguroCortar: false } // CORRECTA
-            ]},
-            { cables: [
-                { valor: "10°",  color: "#e74c3c", esSeguroCortar: true },
-                { valor: "20°",  color: "#3498db", esSeguroCortar: true },
-                { valor: "50°",  color: "#2ecc71", esSeguroCortar: false }, // CORRECTA
-                { valor: "80°",  color: "#f1c40f", esSeguroCortar: true }
-            ]},
-            { cables: [
-                { valor: "180°", color: "#e74c3c", esSeguroCortar: true },
-                { valor: "360°", color: "#3498db", esSeguroCortar: true },
-                { valor: "90°",  color: "#2ecc71", esSeguroCortar: false }, // CORRECTA
-                { valor: "45°",  color: "#f1c40f", esSeguroCortar: true }
-            ]},
-            { cables: [
-                { valor: "115°", color: "#e74c3c", esSeguroCortar: true },
-                { valor: "65°",  color: "#3498db", esSeguroCortar: false }, // CORRECTA
-                { valor: "25°",  color: "#2ecc71", esSeguroCortar: true },
-                { valor: "155°", color: "#f1c40f", esSeguroCortar: true }
-            ]},
-            { cables: [
-                { valor: "33°",  color: "#e74c3c", esSeguroCortar: true },
-                { valor: "147°", color: "#3498db", esSeguroCortar: true },
-                { valor: "57°",  color: "#2ecc71", esSeguroCortar: false }, // CORRECTA
-                { valor: "123°", color: "#f1c40f", esSeguroCortar: true }
-            ]},
-            { cables: [
-                { valor: "75°",  color: "#e74c3c", esSeguroCortar: false }, // CORRECTA
-                { valor: "105°", color: "#3498db", esSeguroCortar: true },
-                { valor: "85°",  color: "#2ecc71", esSeguroCortar: true },
-                { valor: "115°", color: "#f1c40f", esSeguroCortar: true }
-            ]},
-            { cables: [
-                { valor: "16°",  color: "#e74c3c", esSeguroCortar: true },
-                { valor: "164°", color: "#3498db", esSeguroCortar: false }, // CORRECTA
-                { valor: "74°",  color: "#2ecc71", esSeguroCortar: true },
-                { valor: "106°", color: "#f1c40f", esSeguroCortar: true }
-            ]}
+            { cables: [{ valor: "40°", color: "#e74c3c", esSeguroCortar: true }, { valor: "140°", color: "#3498db", esSeguroCortar: false }, { valor: "50°", color: "#2ecc71", esSeguroCortar: true }, { valor: "90°", color: "#f1c40f", esSeguroCortar: true }] },
+            { cables: [{ valor: "100°", color: "#e74c3c", esSeguroCortar: true }, { valor: "80°", color: "#3498db", esSeguroCortar: true }, { valor: "60°", color: "#2ecc71", esSeguroCortar: false }, { valor: "120°", color: "#f1c40f", esSeguroCortar: true }] },
+            { cables: [{ valor: "45°", color: "#e74c3c", esSeguroCortar: true }, { valor: "135°", color: "#3498db", esSeguroCortar: false }, { valor: "55°", color: "#2ecc71", esSeguroCortar: true }, { valor: "180°", color: "#f1c40f", esSeguroCortar: true }] },
+            { cables: [{ valor: "70°", color: "#e74c3c", esSeguroCortar: false }, { valor: "110°", color: "#3498db", esSeguroCortar: true }, { valor: "20°", color: "#2ecc71", esSeguroCortar: true }, { valor: "90°", color: "#f1c40f", esSeguroCortar: true }] },
+            { cables: [{ valor: "30°", color: "#e74c3c", esSeguroCortar: true }, { valor: "60°", color: "#3498db", esSeguroCortar: true }, { valor: "150°", color: "#2ecc71", esSeguroCortar: false }, { valor: "120°", color: "#f1c40f", esSeguroCortar: true }] },
+            { cables: [{ valor: "85°", color: "#e74c3c", esSeguroCortar: true }, { valor: "95°", color: "#3498db", esSeguroCortar: true }, { valor: "105°", color: "#2ecc71", esSeguroCortar: true }, { valor: "175°", color: "#f1c40f", esSeguroCortar: false }] },
+            { cables: [{ valor: "10°", color: "#e74c3c", esSeguroCortar: true }, { valor: "20°", color: "#3498db", esSeguroCortar: true }, { valor: "50°", color: "#2ecc71", esSeguroCortar: false }, { valor: "80°", color: "#f1c40f", esSeguroCortar: true }] },
+            { cables: [{ valor: "180°", color: "#e74c3c", esSeguroCortar: true }, { valor: "360°", color: "#3498db", esSeguroCortar: true }, { valor: "90°", color: "#2ecc71", esSeguroCortar: false }, { valor: "45°", color: "#f1c40f", esSeguroCortar: true }] },
+            { cables: [{ valor: "115°", color: "#e74c3c", esSeguroCortar: true }, { valor: "65°", color: "#3498db", esSeguroCortar: false }, { valor: "25°", color: "#2ecc71", esSeguroCortar: true }, { valor: "155°", color: "#f1c40f", esSeguroCortar: true }] },
+            { cables: [{ valor: "33°", color: "#e74c3c", esSeguroCortar: true }, { valor: "147°", color: "#3498db", esSeguroCortar: true }, { valor: "57°", color: "#2ecc71", esSeguroCortar: false }, { valor: "123°", color: "#f1c40f", esSeguroCortar: true }] },
+            { cables: [{ valor: "75°", color: "#e74c3c", esSeguroCortar: false }, { valor: "105°", color: "#3498db", esSeguroCortar: true }, { valor: "85°", color: "#2ecc71", esSeguroCortar: true }, { valor: "115°", color: "#f1c40f", esSeguroCortar: true }] },
+            { cables: [{ valor: "16°", color: "#e74c3c", esSeguroCortar: true }, { valor: "164°", color: "#3498db", esSeguroCortar: false }, { valor: "74°", color: "#2ecc71", esSeguroCortar: true }, { valor: "106°", color: "#f1c40f", esSeguroCortar: true }] }
         ];
 
         let nivelActual = 0;
@@ -349,16 +293,40 @@
         const maxErrores = 3;
         let intervaloTimer;
         let tiempo = 3600; // 60 minutos
+        let jugadores = [];
 
         const contenedorCables = document.getElementById('cables-container');
         const tituloNivel = document.getElementById('nivel-titulo');
         const mensajeExito = document.getElementById('mensaje-exito');
 
-        function iniciarJuego() {
+        // Función para ir de la historia al registro
+        function mostrarRegistro() {
             document.getElementById('pantalla-inicio').style.display = 'none';
+            document.getElementById('pantalla-registro').style.display = 'block';
+        }
+
+        // Función para leer los nombres y empezar
+        function iniciarMision() {
+            const j1 = document.getElementById('j1').value.trim();
+            const j2 = document.getElementById('j2').value.trim();
+            const j3 = document.getElementById('j3').value.trim();
+            const j4 = document.getElementById('j4').value.trim();
+
+            if(j1) jugadores.push(j1);
+            if(j2) jugadores.push(j2);
+            if(j3) jugadores.push(j3);
+            if(j4) jugadores.push(j4);
+
+            if(jugadores.length < 2) {
+                alert("⚠️ Se requieren al menos 2 operadores para comunicarse en esta misión.");
+                jugadores = []; // Resetea el arreglo por si intentan de nuevo
+                return;
+            }
+
+            document.getElementById('pantalla-registro').style.display = 'none';
             document.getElementById('hud').style.display = 'flex';
-            document.getElementById('game-container').style.display = 'block';
             
+            // Iniciar cronómetro
             intervaloTimer = setInterval(() => {
                 tiempo--;
                 let minutos = Math.floor(tiempo / 60);
@@ -371,17 +339,41 @@
                 }
             }, 1000);
 
-            cargarNivel();
+            verificarTurno();
         }
 
-        function cargarNivel() {
+        // Función para verificar si hay cambio de operador (cada 2 bombas)
+        function verificarTurno() {
             if (nivelActual >= niveles.length) {
+                // GANARON EL JUEGO
                 clearInterval(intervaloTimer);
                 document.getElementById('game-container').style.display = 'none';
                 document.getElementById('hud').style.display = 'none';
+                document.getElementById('pantalla-turno').style.display = 'none';
                 document.getElementById('mensaje-final').style.display = 'block';
                 return;
             }
+
+            // Cada 2 niveles (0, 2, 4, 6, 8, 10), obliga a cambiar de jugador
+            if (nivelActual % 2 === 0) {
+                // Calcula de quién es el turno basándose en la lista de jugadores
+                const indiceJugador = (nivelActual / 2) % jugadores.length;
+                const operadorActual = jugadores[indiceJugador];
+
+                document.getElementById('game-container').style.display = 'none';
+                document.getElementById('pantalla-turno').style.display = 'block';
+                
+                document.getElementById('texto-turno').innerHTML = `El control de la terminal ha sido transferido a:<br><br><span class="resaltar" style="font-size: 1.5em; text-shadow: 0 0 10px #f1c40f;">[ ${operadorActual} ]</span><br><br>Debes estar frente a la pantalla. Los demás operadores deben darte instrucciones con el manual físico.`;
+            } else {
+                // Si es nivel impar (1, 3, 5), sigue el mismo jugador sin mostrar la pantalla de cambio
+                cargarCablesNivel();
+            }
+        }
+
+        // Función para mostrar la bomba
+        function cargarCablesNivel() {
+            document.getElementById('pantalla-turno').style.display = 'none';
+            document.getElementById('game-container').style.display = 'block';
 
             tituloNivel.textContent = `BOMBA ${nivelActual + 1} / 12`;
             cablesCortados = 0;
@@ -414,7 +406,7 @@
                         mensajeExito.style.display = 'none';
                         contenedorCables.style.pointerEvents = 'auto';
                         nivelActual++;
-                        cargarNivel();
+                        verificarTurno(); // Aquí es donde chequea si toca rotar o seguir
                     }, 1500);
                 }
             } else {
@@ -441,7 +433,8 @@
                     location.reload();
                 } else {
                     alert("¡CORTASTE EL CABLE CORRECTO! La bomba se desestabilizó. Tienen que reintentar este módulo.");
-                    cargarNivel(); 
+                    // Si explota, repetimos el mismo nivel, por lo que volvemos a evaluar el turno para que le recuerde quién está al mando.
+                    verificarTurno(); 
                 }
             }, 1000);
         }
