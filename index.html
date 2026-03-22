@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desactivación - Liceo de Apodaca</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+        body {
+            background-color: #111;
+            color: #0f0;
+            font-family: 'Share Tech Mono', monospace;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            overflow: hidden;
+            transition: background-color 0.1s;
+        }
+
+        h1 { font-size: 2.5em; text-shadow: 0 0 10px #0f0; margin-bottom: 5px; }
+        
+        /* Pantallas */
+        #pantalla-inicio, #mensaje-final {
+            max-width: 800px;
+            margin: 50px auto;
+            border: 2px solid #0f0;
+            padding: 40px;
+            background: #000;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.4);
+            border-radius: 10px;
+        }
+
+        #game-container {
+            display: none; 
+            max-width: 600px;
+            margin: 0 auto;
+            background: #222;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+            position: relative; /* Para centrar el mensaje de éxito */
+        }
+
+        #mensaje-final { display: none; }
+
+        /* Estilo del mensaje de éxito entre niveles */
+        #mensaje-exito {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 50, 0, 0.9);
+            border: 2px solid #0f0;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 30px #0f0;
+            z-index: 1000;
+            width: 80%;
+        }
+
+        #mensaje-exito h2 {
+            color: #0f0;
+            margin: 0;
+            font-size: 2em;
+            text-shadow: 0 0 15px #0f0;
+        }
+
+        .historia { font-size: 1.3em; line-height: 1.6; color: #fff; margin-bottom: 30px; text-align: left; }
+        .resaltar { color: #f1c40f; font-weight: bold; }
+        .alerta { color: #e74c3c; font-weight: bold; text-shadow: 0 0 5px red; }
+
+        button.btn-iniciar {
+            background-color: #0f0;
+            color: #000;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.5em;
+            font-weight: bold;
+            padding: 15px 40px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            box-shadow: 0 0 15px #0f0;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        button.btn-iniciar:hover { background-color: #fff; transform: scale(1.05); }
+
+        #hud {
+            display: none;
+            justify-content: space-between;
+            max-width: 600px;
+            margin: 0 auto 20px auto;
+            font-size: 1.5em;
+            border: 2px solid #0f0;
+            padding: 10px;
+            background: #000;
+        }
+
+        .strike { color: red; text-shadow: 0 0 10px red; }
+
+        .instrucciones { font-size: 1.2em; color: #fff; margin-bottom: 30px; border-bottom: 1px dashed #555; padding-bottom: 15px; }
+
+        .cables-container { display: flex; flex-direction: column; gap: 15px; }
+
+        .cable {
+            position: relative;
+            height: 60px;
+            background: linear-gradient(90deg, #555 10%, var(--cable-color) 10%, var(--cable-color) 90%, #555 90%);
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8em;
+            color: white;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px black;
+            transition: transform 0.1s, opacity 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+
+        .cable:active { transform: scale(0.98); }
+
+        .cable.cortado {
+            opacity: 0.3;
+            pointer-events: none;
+            background: #333;
+            text-decoration: line-through;
+            color: #888;
+        }
+
+        .explosion {
+            animation: shake 0.5s infinite;
+            background-color: #500 !important;
+            color: #fff !important;
+        }
+
+        @keyframes shake {
+            0% { transform: translate(2px, 2px) rotate(0deg); }
+            10% { transform: translate(-2px, -3px) rotate(-1deg); }
+            20% { transform: translate(-4px, 0px) rotate(1deg); }
+            30% { transform: translate(4px, 3px) rotate(0deg); }
+            40% { transform: translate(2px, -2px) rotate(1deg); }
+            50% { transform: translate(-2px, 3px) rotate(-1deg); }
+            60% { transform: translate(-4px, 2px) rotate(0deg); }
+            70% { transform: translate(4px, 2px) rotate(-1deg); }
+            80% { transform: translate(-2px, -2px) rotate(1deg); }
+            90% { transform: translate(2px, 3px) rotate(0deg); }
+            100% { transform: translate(2px, -3px) rotate(-1deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- PANTALLA DE INICIO (HISTORIA) -->
+    <div id="pantalla-inicio">
+        <h1>🚨 ALERTA DE SEGURIDAD 🚨</h1>
+        <div class="historia">
+            <p>Atención escuadrón del <strong>Liceo de Apodaca</strong>. Los hackers han vulnerado nuestra red nuevamente. Esta vez, han plantado <span class="resaltar">12 bombas lógicas</span> directamente en la oficina de Charlie, amenazando con destruir los servidores principales del colegio.</p>
+            <p>Ustedes operarán a ciegas. Tienen en sus manos el manual físico con los problemas geométricos. La persona frente a esta terminal no verá los diagramas, solo verá los cables de frecuencia disponibles para cortar.</p>
+            <p><strong>SU MISIÓN:</strong> Analizar los diagramas físicos, calcular la respuesta correcta de cada módulo y comunicársela al operador de la terminal. <br><br>
+            <span class="alerta">REGLA VITAL: DEBEN CORTAR LOS 3 CABLES INCORRECTOS. Si el operador corta el cable que contiene la respuesta matemática correcta... LA BOMBA DETONARÁ.</span></p>
+        </div>
+        <button class="btn-iniciar" onclick="iniciarJuego()">INICIAR PROTOCOLO</button>
+    </div>
+
+    <!-- HUD (TIEMPO Y ERRORES) -->
+    <div id="hud">
+        <div id="timer">Tiempo: 60:00</div>
+        <div id="strikes">Errores: 0/3</div>
+    </div>
+
+    <!-- CONTENEDOR DEL JUEGO (BOMBA) -->
+    <div id="game-container">
+        
+        <!-- MENSAJE DE ÉXITO (Se oculta por defecto) -->
+        <div id="mensaje-exito">
+            <h2>¡BOMBA DESACTIVADA CON ÉXITO!</h2>
+        </div>
+
+        <h1 id="nivel-titulo">BOMBA 1 / 12</h1>
+        
+        <div class="instrucciones">
+            Revisa el <strong>Documento Físico</strong> para este módulo.<br>
+            Corta los <strong>3 cables incorrectos</strong>. <br>
+            <span class="alerta">¡NO CORTES LA RESPUESTA CORRECTA!</span>
+        </div>
+
+        <div class="cables-container" id="cables-container">
+            <!-- Los cables se generan aquí -->
+        </div>
+    </div>
+
+    <!-- PANTALLA FINAL (VICTORIA) -->
+    <div id="mensaje-final">
+        <h1 style="color: #0f0; text-shadow: 0 0 20px #0f0; font-size: 3em;">✅ SISTEMA ASEGURADO ✅</h1>
+        <div class="historia" style="text-align: center; margin-top: 30px;">
+            <p>¡Misión cumplida, escuadrón!</p>
+            <p>Gracias a su excelente comunicación y razonamiento geométrico, las 12 bombas en la oficina de Charlie han sido desactivadas con éxito.</p>
+            <p class="resaltar" style="font-size: 1.5em; margin-top: 20px;">Los servidores del Liceo de Apodaca han sido salvados y todos los datos académicos están completamente resguardados.</p>
+        </div>
+    </div>
+
+    <!-- Efecto de sonido (opcional) -->
+    <audio id="sonido-explosion" src="https://www.soundjay.com/mechanical/sounds/explosion-01.mp3"></audio>
+
+    <script>
+        // --- AQUÍ MODIFICAS TUS 12 PROBLEMAS ---
+        const niveles = [
+            { // BOMBA 1
+                cables: [
+                    { valor: "40°",  color: "#e74c3c", esSeguroCortar: true },
+                    { valor: "140°", color: "#3498db", esSeguroCortar: false }, // LA RESPUESTA CORRECTA
+                    { valor: "50°",  color: "#2ecc71", esSeguroCortar: true },
+                    { valor: "90°",  color: "#f1c40f", esSeguroCortar: true }
+                ]
+            },
+            { // BOMBA 2
+                cables: [
+                    { valor: "100°", color: "#e74c3c", esSeguroCortar: true },
+                    { valor: "80°",  color: "#3498db", esSeguroCortar: true },
+                    { valor: "60°",  color: "#2ecc71", esSeguroCortar: false }, 
+                    { valor: "120°", color: "#f1c40f", esSeguroCortar: true }
+                ]
+            },
+            { // BOMBA 3
+                cables: [
+                    { valor: "45°",  color: "#e74c3c", esSeguroCortar: true },
+                    { valor: "135°", color: "#3498db", esSeguroCortar: false }, 
+                    { valor: "55°",  color: "#2ecc71", esSeguroCortar: true },
+                    { valor: "180°", color: "#f1c40f", esSeguroCortar: true }
+                ]
+            },
+            { // BOMBA 4
+                cables: [
+                    { valor: "70°",  color: "#e74c3c", esSeguroCortar: false }, 
+                    { valor: "110°", color: "#3498db", esSeguroCortar: true },
+                    { valor: "20°",  color: "#2ecc71", esSeguroCortar: true },
+                    { valor: "90°",  color: "#f1c40f", esSeguroCortar: true }
+                ]
+            },
+            { // BOMBA 5
+                cables: [
+                    { valor: "30°",  color: "#e74c3c", esSeguroCortar: true },
+                    { valor: "60°",  color: "#3498db", esSeguroCortar: true },
+                    { valor: "150°", color: "#2ecc71", esSeguroCortar: false }, 
+                    { valor: "120°", color: "#f1c40f", esSeguroCortar: true }
+                ]
+            },
+            { // BOMBA 6
+                cables: [
+                    { valor: "85°",  color: "#e74c3c", esSeguroCortar: true },
+                    { valor: "95°",  color: "#3498db", esSeguroCortar: true },
+                    { valor: "105°", color: "#2ecc71", esSeguroCortar: true },
+                    { valor: "175°", color: "#f1c40f", esSeguroCortar: false } 
+                ]
+            },
+            { // BOMBA 7
+                cables: [
+                    { valor: "10°",  color: "#e74c3c", esSeguroCortar: true },
+                    { valor: "20°",  color: "#3498db", esSeguroCortar: true },
+                    { valor: "50°",  color: "#2ecc71", esSeguroCortar: false }, 
+                    { valor: "80°",  color: "#f1c40f", esSeguroCortar: true }
+                ]
+            },
+            { // BOMBA 8
+                cables: [
+                    { valor: "180°", color: "#e74c3c", esSeguroCortar: true },
+                    { valor: "360°", color: "#3498db", esSeguroCortar: true },
+                    { valor: "90°",  color: "#2ecc71", esSeguroCortar: false }, 
+                    { valor: "45°",  color: "#f1c40f", esSeguroCortar: true }
+                ]
+            },
+            { // BOMBA 9
+                cables: [
+                    { valor: "115°", color: "#e74c3c", esSeguroCortar: true },
+                    { valor: "65°",  color: "#3498db", esSeguroCortar: false }, 
+                    { valor: "25°",  color: "#2ecc71", esSeguroCortar: true },
+                    { valor: "155°", color: "#f1c40f", esSeguroCortar: true }
+                ]
+            },
+            { // BOMBA 10
+                cables: [
+                    { valor: "33°",  color: "#e74c3c", esSeguroCortar: true },
+                    { valor: "147°", color: "#3498db", esSeguroCortar: true },
+                    { valor: "57°",  color: "#2ecc71", esSeguroCortar: false }, 
+                    { valor: "123°", color: "#f1c40f", esSeguroCortar: true }
+                ]
+            },
+            { // BOMBA 11
+                cables: [
+                    { valor: "75°",  color: "#e74c3c", esSeguroCortar: false }, 
+                    { valor: "105°", color: "#3498db", esSeguroCortar: true },
+                    { valor: "85°",  color: "#2ecc71", esSeguroCortar: true },
+                    { valor: "115°", color: "#f1c40f", esSeguroCortar: true }
+                ]
+            },
+            { // BOMBA 12 (Jefe Final)
+                cables: [
+                    { valor: "16°",  color: "#e74c3c", esSeguroCortar: true },
+                    { valor: "164°", color: "#3498db", esSeguroCortar: false }, 
+                    { valor: "74°",  color: "#2ecc71", esSeguroCortar: true },
+                    { valor: "106°", color: "#f1c40f", esSeguroCortar: true }
+                ]
+            }
+        ];
+
+        let nivelActual = 0;
+        let cablesCortados = 0;
+        let errores = 0;
+        const maxErrores = 3;
+        let intervaloTimer;
+        let tiempo = 3600; // 60 minutos
+
+        const contenedorCables = document.getElementById('cables-container');
+        const tituloNivel = document.getElementById('nivel-titulo');
+        const mensajeExito = document.getElementById('mensaje-exito');
+
+        function iniciarJuego() {
+            document.getElementById('pantalla-inicio').style.display = 'none';
+            document.getElementById('hud').style.display = 'flex';
+            document.getElementById('game-container').style.display = 'block';
+            
+            // Iniciar cronómetro
+            intervaloTimer = setInterval(() => {
+                tiempo--;
+                let minutos = Math.floor(tiempo / 60);
+                let segundos = tiempo % 60;
+                document.getElementById('timer').textContent = `Tiempo: ${minutos}:${segundos < 10 ? '0'+segundos : segundos}`;
+                if(tiempo <= 0) {
+                    clearInterval(intervaloTimer);
+                    alert("¡TIEMPO AGOTADO! Los servidores fueron destruidos.");
+                    location.reload();
+                }
+            }, 1000);
+
+            cargarNivel();
+        }
+
+        function cargarNivel() {
+            if (nivelActual >= niveles.length) {
+                // GANARON EL JUEGO
+                clearInterval(intervaloTimer);
+                document.getElementById('game-container').style.display = 'none';
+                document.getElementById('hud').style.display = 'none';
+                document.getElementById('mensaje-final').style.display = 'block';
+                return;
+            }
+
+            const nivel = niveles[nivelActual];
+            tituloNivel.textContent = `BOMBA ${nivelActual + 1} / 12`;
+            cablesCortados = 0;
+
+            // Mezclar los cables
+            const cablesMezclados = nivel.cables.sort(() => Math.random() - 0.5);
+            contenedorCables.innerHTML = '';
+
+            cablesMezclados.forEach(cableInfo => {
+                const divCable = document.createElement('div');
+                divCable.className = 'cable';
+                divCable.style.setProperty('--cable-color', cableInfo.color);
+                divCable.textContent = cableInfo.valor;
+                divCable.onclick = () => intentarCortar(divCable, cableInfo.esSeguroCortar);
+                contenedorCables.appendChild(divCable);
+            });
+        }
+
+        function intentarCortar(elemento, esSeguroCortar) {
+            if (elemento.classList.contains('cortado')) return;
+
+            if (esSeguroCortar) {
+                // CORTE EXITOSO
+                elemento.classList.add('cortado');
+                cablesCortados++;
+
+                if (cablesCortados === 3) {
+                    // BLOQUEAMOS LA PANTALLA TEMPORALMENTE Y MOSTRAMOS EL MENSAJE DE ÉXITO
+                    contenedorCables.style.pointerEvents = 'none';
+                    mensajeExito.style.display = 'block';
+
+                    setTimeout(() => {
+                        mensajeExito.style.display = 'none';
+                        contenedorCables.style.pointerEvents = 'auto';
+                        nivelActual++;
+                        cargarNivel();
+                    }, 1500); // 1.5 segundos leyendo el mensaje de éxito
+                }
+            } else {
+                // EXPLOSIÓN (Cortaron el cable con la respuesta matemática)
+                detonarBomba();
+            }
+        }
+
+        function detonarBomba() {
+            document.getElementById('sonido-explosion').play().catch(()=>console.log("Audio bloqueado por navegador"));
+            document.body.classList.add('explosion');
+            
+            errores++;
+            document.getElementById('strikes').textContent = `Errores: ${errores}/${maxErrores}`;
+            document.getElementById('strikes').classList.add('strike');
+            contenedorCables.style.pointerEvents = 'none';
+
+            setTimeout(() => {
+                document.body.classList.remove('explosion');
+                document.getElementById('strikes').classList.remove('strike');
+                contenedorCables.style.pointerEvents = 'auto';
+
+                if (errores >= maxErrores) {
+                    alert("¡SISTEMA COLAPSADO! La oficina de Charlie fue destruida. Vuelvan a empezar.");
+                    location.reload();
+                } else {
+                    alert("¡CORTASTE EL CABLE CORRECTO! La bomba se desestabilizó. Tienen que reintentar este módulo.");
+                    cargarNivel(); // Reinicia la bomba actual
+                }
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
